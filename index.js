@@ -15,9 +15,11 @@ const CONNECTION_STRING = process.env.MONGO_CONNECTION_STRING || "mongodb://127.
 mongoose.connect(CONNECTION_STRING);
 
 // Connection event listeners
-mongoose.connection.on('connected', () => {
-    console.log('Mongoose connected to MongoDB successfully.');
-})
+mongoose.connection.on("connected", () => {
+    console.log("Connected to MongoDB:");
+    console.log("Host:", mongoose.connection.host);
+    console.log("Database name:", mongoose.connection.name);
+});
 mongoose.connection.on('error', (err) => {
     console.error('Mongoose connection error:', err);
 });
@@ -34,7 +36,7 @@ app.use(cors({
 app.use(express.json());
 
 const sessionOptions = {
-    secret: process.env.SESSION_SECRET || "kanbas",
+    secret: process.env.SESSION_SECRET || "Kanbas",
     resave: false,
     saveUninitialized: false,
 };
