@@ -1,5 +1,4 @@
 import model from "./model.js";
-import bcrypt from "bcrypt";
 
 export const createUser = (user) => {
     delete user._id;
