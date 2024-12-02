@@ -1,34 +1,20 @@
-import Database from "../Database/index.js";
+import model from "./model.js";
 
-export function findAssignmentsForCourse(courseId) {
-    const { assignments } = Database;
-    return assignments.filter((assignment) => assignment.course === courseId);
+export const findAssignmentsForCourse = (courseId) => {
+    try{
+        return model.find({ course: courseId }).exec();
+    } catch (error) {}
+        console.error("Error finding assignments for course:", error);
+        throw error;
+};   
+
+export const createAssignment = (assignment) => {
+    delete assignment._id;
+    return model.create(assignment);
 }
 
-export function createAssignment(assignment) {
-    const { assignments } = Database;
-    const newAssignment = { 
-        ...assignment, 
-        _id: assignment._id || Date.now().toString(),
-    };
+export const deleteAssignment = (assignmentId) => model.deleteOne({ _id: assignmentId });
 
-    const idExists = assignments.some((existing) => existing._id === newAssignment._id);
-    if (idExists) {
-        throw new Error("Assignment ID must be unique");
-    }
 
-    Database.assignments = [...assignments, newAssignment];
-    return newAssignment;
-}
+export const updateAssignment = (assignmentId, assignmentUpdates) => model.updateOne({ _id: assignmentId }, { $set: assignmentUpdates });
 
-export function deleteAssignment(assignmentId) {
-    const { assignments } = Database;
-    Database.assignments = assignments.filter((assignment) => assignment._id !== assignmentId);
-}
-
-export function updateAssignment(assignmentId, assignmentUpdates) {
-    const { assignments } = Database;
-    const assignment = assignments.find((assignment) => assignment._id === assignmentId);
-    Object.assign(assignment, assignmentUpdates);
-    return assignment;
-}
