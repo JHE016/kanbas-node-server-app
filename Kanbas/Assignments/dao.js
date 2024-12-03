@@ -12,7 +12,8 @@ export function createAssignment(assignment) {
         _id: assignment._id || Date.now().toString(),
     };
 
-    const idExists = assignments.some((existing) => existing._id === newAssignment._id);
+    const idExists = assignments.some((existing) => existing._id === newAssignment._id
+                                        && existing.course === newAssignment.course);
     if (idExists) {
         throw new Error("Assignment ID must be unique");
     }
