@@ -12,11 +12,13 @@ export default function AssignmentRoutes(app) {
     app.put("/api/assignments/:assignmentId", async (req, res) => {
         const { assignmentId } = req.params;
         const assignmentUpdates = req.body;
-        const updatedAssignment = await assignmentsDao.updateAssignment(assignmentId, assignmentUpdates);
-        if (updatedAssignment) {
+        try {
+            const status = await assignmentsDao.updateAssignment(assignmentId, assignmentUpdates);
+            // Get the updated assignment to return
+            const updatedAssignment = await assignmentsDao.findAssignmentsForCourse(assignmentUpdates.course);
             res.json(updatedAssignment);
-        } else {
-            res.status(404).send("Assignment not found");
+        } catch (error) {
+            res.status(500).json({ error: "Error updating assignment" });
         }
     });
 }
